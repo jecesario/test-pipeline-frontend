@@ -36,8 +36,17 @@ jobs:
       matrix:
         node-version: [ 16.x ]
     steps:
-      - name: Build the application
-        run: npm run build
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Build
+        run: |
+          npm install
+          npx webpack
 
       - name: Deploy to Railway
         run: npx railway deploy --api-key ${{ secrets.RAILWAY_API_KEY }}
